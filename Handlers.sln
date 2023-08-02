@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handlers", "Handlers.csproj", "{E7719213-ECE5-4314-857E-B24A1F4F9A96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "..\UnitTests\UnitTests.csproj", "{2A51C8D2-C466-49D8-98FD-0AA3B3BE5074}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handler Test", "..\Handler Test\Handler Test.csproj", "{507DBAA9-0E76-42C8-9991-82D511D8E0DE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E7719213-ECE5-4314-857E-B24A1F4F9A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7719213-ECE5-4314-857E-B24A1F4F9A96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7719213-ECE5-4314-857E-B24A1F4F9A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7719213-ECE5-4314-857E-B24A1F4F9A96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A51C8D2-C466-49D8-98FD-0AA3B3BE5074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A51C8D2-C466-49D8-98FD-0AA3B3BE5074}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A51C8D2-C466-49D8-98FD-0AA3B3BE5074}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A51C8D2-C466-49D8-98FD-0AA3B3BE5074}.Release|Any CPU.Build.0 = Release|Any CPU
+		{507DBAA9-0E76-42C8-9991-82D511D8E0DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{507DBAA9-0E76-42C8-9991-82D511D8E0DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{507DBAA9-0E76-42C8-9991-82D511D8E0DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{507DBAA9-0E76-42C8-9991-82D511D8E0DE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EE320AD-B96D-4C70-81DE-78A760D909FB}
+	EndGlobalSection
+EndGlobal
