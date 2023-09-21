@@ -263,6 +263,40 @@ namespace Handlers {
                 return Input;
             }
         }
+        public static string GetStringInEncapulated(string Input, char StartEncapulator, char EndEncapulator, int StartEncapulatorIndex, int EndEncapulatorIndex, bool IncludeEncapulators = false) {
+            int IndexStart = -1;
+            int IndexEnd = -1;
+
+            int StartEncCnt = 0;
+            int EndEncCnt = 0;
+            for (int i = 0; i < Input.Length; i++) {
+                if (Input[i] == StartEncapulator) {
+                    if (StartEncapulatorIndex == StartEncCnt) { IndexStart = i; }
+                    StartEncCnt++;
+                }
+                if (Input[i] == EndEncapulator) {
+                    if (EndEncapulatorIndex == EndEncCnt) { IndexEnd = i; }
+                    EndEncCnt++;
+                }
+            }
+            if (IndexEnd < 0) { IndexEnd = Input.Length - 1; }
+            if (IncludeEncapulators == true) {
+                if (IndexStart < 0) { return ""; }
+                int Length = (IndexEnd - IndexStart) + 1;
+                if (Length < 0) { return ""; }
+                return Input.Substring(IndexStart, Length);
+            }
+            else {
+                if (IndexStart < 0) { return ""; }
+                if ((IndexStart + 1 > Input.Length - 1) || (IndexEnd - 1 < 0)) { return ""; }
+                int Length = (IndexEnd - IndexStart);
+                if (EndEncapulatorIndex >=0) {
+                    Length -= 1;
+                }
+                if (Length < 0) { return ""; }
+                return Input.Substring(IndexStart+1, Length);
+            }
+        }
         public static string ExtractStringBetweenIndices(string Input, int LowerIndex, int UpperIndex) {
             return STR_SSS(Input, LowerIndex, UpperIndex);
         }
@@ -681,7 +715,7 @@ namespace Handlers {
                     return Input + CharacterString(Length - Len, CharacterToPlace);
                 }
                 else {
-                    return  CharacterString(Length - Len, CharacterToPlace) + Input;
+                    return CharacterString(Length - Len, CharacterToPlace) + Input;
                 }
             }
         }

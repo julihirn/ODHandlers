@@ -8,7 +8,9 @@ using System.Drawing;
 using System.Collections.Generic;
 using System;
 using System.Text.RegularExpressions;
-
+using System.IO;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Xml.Linq;
 
 namespace Handlers {
     public class DocumentHandler {
@@ -879,6 +881,54 @@ namespace Handlers {
             }
             return Default;
         }
+
+
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name, int Value) {
+            string Assignment = "def,int:" + Name.Trim(' ').Trim('\t') + "=" + Value.ToString();
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name, string Value) {
+            string Assignment = "def,str:" + Name.Trim(' ').Trim('\t') + "=" + StringHandler.EncapsulateString(Value);
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+        public static void WriteEntry(StreamWriter StrWriter, string EnumName) {
+            string Assignment = EnumName.Trim(' ').Trim('\t');
+            StrWriter.WriteLine("Begin,");
+            StrWriter.WriteLine("Create Lines(" + Assignment + "), ");
+        }
+        public static void WriteComment(StreamWriter StrWriter, int Tabs, string Comment) {
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, "--" + Comment));
+        }
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name, decimal Value) {
+            string Assignment = "def,dec:" + Name.Trim(' ').Trim('\t') + "=" + Value.ToString();
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name, long Value) {
+            string Assignment = "def,lng:" + Name.Trim(' ').Trim('\t') + "=" + Value.ToString();
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name, bool Value) {
+            string Assignment = "def,bol:" + Name.Trim(' ').Trim('\t') + "=" + Value.ToString();
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name, short Value) {
+            string Assignment = "def,sng:" + Name.Trim(' ').Trim('\t') + "=" + Value.ToString();
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name, byte Value) {
+            string Assignment = "def,bte:" + Name.Trim(' ').Trim('\t') + "=" + Value.ToString();
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name, double Value) {
+            string Assignment = "def,dbl:" + Name.Trim(' ').Trim('\t') + "=" + Value.ToString();
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+        public static void Write(StreamWriter StrWriter, int Tabs, string Name) {
+            string Assignment = "def,parm:" + Name.Trim(' ').Trim('\t') + "{";
+            StrWriter.WriteLine(StringHandler.AddTabs(Tabs, Assignment));
+        }
+
+
     }
     public class ParameterStructure {
         public string Name;

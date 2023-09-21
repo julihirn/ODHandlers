@@ -14,6 +14,7 @@ using System.Numerics;
 using System.ComponentModel;
 using System.Runtime.Remoting.Messaging;
 using System.Globalization;
+using System.Drawing.Drawing2D;
 
 namespace Handlers {
     public class MathHandler {
@@ -605,6 +606,8 @@ namespace Handlers {
                 else { return "0"; }
             }
             else { return "0"; }
+            Temp = Temp.TrimStart('0');
+            if (Temp.Length == 0) { Temp = "0"; }
             return Temp;
         }
         public static string HexadecimalToBinary(string Data) {
@@ -621,6 +624,8 @@ namespace Handlers {
                 else { return "0"; }
             }
             else { return "0"; }
+            Temp = Temp.TrimStart('0');
+            if (Temp.Length == 0) { Temp = "0"; }
             return Temp;
         }
         public static string DecimalToBinary(string Data, BinaryFormatFlags FormatFlags) {
@@ -656,6 +661,9 @@ namespace Handlers {
             if ((IsSigned == true) && (DecimalData.IsNegitive() == true)) {
                 //int ExtraDigits = BitSize - BinaryResult.Length;
                 BinaryResult = StringHandler.PadWithCharacter(BinaryResult, BitSize, '1', false);
+            }
+            if (BinaryResult.Length == 0) {
+                BinaryResult = "0";
             }
             return BinaryResult;
         }
@@ -703,6 +711,13 @@ namespace Handlers {
             string BinaryData = DecimalToBinary(Data, FormatFlags);
             return BinaryToHexadecimal(BinaryData);
         }
+        public static TernaryString DecimalToTriBases(string Data, BinaryFormatFlags FormatFlags) {
+            string BinaryData = DecimalToBinary(Data, FormatFlags);
+            string OctalData = BinaryToOctal(BinaryData);
+            string HexData = BinaryToHexadecimal(BinaryData);
+            TernaryString Output = new TernaryString(BinaryData, OctalData, HexData);
+            return Output;
+        }
         public static string BinaryToHexadecimal(string Data) {
             string Temp = "";
             Data = Data.Replace(" ", "");
@@ -738,6 +753,10 @@ namespace Handlers {
             int ExpectedLength = BinaryFormatFlagsToLength(FormatFlags);
             Data = Data.Replace(" ", "");
             Data = Data.Replace(Constants.Tab.ToString(), "");
+            Data = Data.TrimStart('0');
+            if (Data.Length == 0) {
+                Data = "0";
+            }
             if (Data.Length > ExpectedLength) {
                 return Result;
             }
@@ -925,7 +944,7 @@ namespace Handlers {
             else if (Input == "1111") { return 'F'; }
             return '0';
         }
-        private static bool IsHex(string Input) {
+        public static bool IsHex(string Input) {
             bool isHex;
             for (int i = 0; i < Input.Length; i++) {
                 char c = Input[i];
@@ -937,7 +956,7 @@ namespace Handlers {
             }
             return true;
         }
-        private static bool IsBin(string Input) {
+        public static bool IsBin(string Input) {
             bool isHex;
             for (int i = 0; i < Input.Length; i++) {
                 char c = Input[i];
@@ -947,7 +966,7 @@ namespace Handlers {
             }
             return true;
         }
-        private static bool IsOct(string Input) {
+        public static bool IsOct(string Input) {
             bool isHex;
             for (int i = 0; i < Input.Length; i++) {
                 char c = Input[i];
@@ -957,7 +976,21 @@ namespace Handlers {
             }
             return true;
         }
-        private static int BinaryFormatFlagsToLength(BinaryFormatFlags FormatFlags) {
+        public static int HexCharToInt(char Input) {
+            if (((int)Input - 0x30 >= 0) && ((int)Input - 0x30 <= 9)) {
+                int Output = 0; int.TryParse(Input.ToString(), out Output);
+                return Output;
+            }
+            else {
+                char LowerChar = Input.ToString().ToLower()[0];
+                if (((int)LowerChar - 0x61 >= 0) && ((int)Input - 0x61 <= 5)) {
+                    int Output = 0; int.TryParse(Input.ToString(), out Output);
+                    return Output + 10;
+                }
+            }
+            return -1;
+        }
+        public static int BinaryFormatFlagsToLength(BinaryFormatFlags FormatFlags) {
             BinaryFormatFlags Flags = (BinaryFormatFlags)((int)FormatFlags & 0x00FFF);
             switch (Flags) {
                 case BinaryFormatFlags.Length4Bit: return 4;
@@ -972,7 +1005,22 @@ namespace Handlers {
                 default: return 0;
             }
         }
+
         #endregion
+        public static DualNumericalString GetBinaryFormatRange(BinaryFormatFlags FormatFlags) {
+            int BitCount = BinaryFormatFlagsToLength(FormatFlags);
+            bool IsSigned = ((int)FormatFlags & 0xF0000) == 0x10000 ? true : false;
+
+            string Expression = "(2^(" + BitCount.ToString() + "))";
+            if (IsSigned == true) { Expression += "/2"; }
+            NumericalString Maximum = EvaluateExpression(Expression, null);
+            if (IsSigned == false) {
+                return new DualNumericalString(new NumericalString(0), Maximum - 1);
+            }
+            else {
+                return new DualNumericalString(Maximum * (-1), Maximum - 1);
+            }
+        }
     }
     public enum ExpressionScriptType {
         Normal = 0x00,
@@ -992,6 +1040,44 @@ namespace Handlers {
         Signed = 0x10000,
         Float = 0x11010,
         Double = 0x11020,
+    }
+    public class DualNumericalString {
+        public DualNumericalString(NumericalString A, NumericalString B) {
+            this.a = A;
+            this.b = B;
+        }
+        NumericalString a = new NumericalString();
+        public NumericalString A {
+            get { return a; }
+            // set { a = value; }
+        }
+        NumericalString b = new NumericalString();
+        public NumericalString B {
+            get { return b; }
+            //set { a = value; }
+        }
+    }
+    public class TernaryString {
+        public TernaryString(string A, string B, string C) {
+            this.a = A;
+            this.b = B;
+            this.c = C;
+        }
+        string a = "";
+        public string A {
+            get { return a; }
+            // set { a = value; }
+        }
+        string b = "";
+        public string B {
+            get { return b; }
+            //set { a = value; }
+        }
+        string c = "";
+        public string C {
+            get { return c; }
+            //set { a = value; }
+        }
     }
     public class ExpressionFormat {
         public ExpressionScriptType ScriptType = ExpressionScriptType.Normal;
@@ -1288,6 +1374,16 @@ namespace Handlers {
             NumericalString c = new NumericalString(Result);
             return c;
         }
+        public static NumericalString operator -(object a, NumericalString b) {
+            string Result = ProcessOperator(LocalOperator.Addition, new NumericalString(a).ToString(), b.Negate().ToString());
+            NumericalString c = new NumericalString(Result);
+            return c;
+        }
+        public static NumericalString operator -(NumericalString a, object b) {
+            string Result = ProcessOperator(LocalOperator.Addition, a.ToString(), new NumericalString(b).Negate().ToString());
+            NumericalString c = new NumericalString(Result);
+            return c;
+        }
         public static NumericalString operator --(NumericalString a) {
             string Result = ProcessOperator(LocalOperator.Addition, a.ToString(), "-1");
             NumericalString c = new NumericalString(Result);
@@ -1414,7 +1510,7 @@ namespace Handlers {
             }
             return this;
         }
-        #endregion 
+        #endregion
         #region Equality Comparation
         public static bool operator ==(NumericalString a, NumericalString b) {
             if (a.IsZero() && b.IsZero()) { return true; }
@@ -1553,7 +1649,7 @@ namespace Handlers {
             }
             return LastResult;
         }
-        #endregion 
+        #endregion
         #region Formatting
         private static string Decimalise(string Input, int Location, bool FromEnd = true) {
             string Output = "";
